@@ -168,7 +168,25 @@ export function createSessionsSpawnTool(opts?: {
       const childSessionKey = `agent:${targetAgentId}:subagent:${crypto.randomUUID()}`;
       const spawnedByKey = requesterInternalKey;
       const targetAgentConfig = resolveAgentConfig(cfg, targetAgentId);
+      // Task-based model routing: check taskModels config by label (takes priority over caller's model param)
+      const taskModelFromConfig = (() => {
+        if (!label) return undefined;
+        const agentTaskModels = targetAgentConfig?.subagents?.taskModels;
+        if (agentTaskModels && typeof agentTaskModels === "object" && label in agentTaskModels) {
+          return agentTaskModels[label];
+        }
+        const defaultTaskModels = cfg.agents?.defaults?.subagents?.taskModels;
+        if (
+          defaultTaskModels &&
+          typeof defaultTaskModels === "object" &&
+          label in defaultTaskModels
+        ) {
+          return defaultTaskModels[label];
+        }
+        return undefined;
+      })();
       const resolvedModel =
+        taskModelFromConfig ?? // Config-enforced task model takes priority
         normalizeModelSelection(modelOverride) ??
         normalizeModelSelection(targetAgentConfig?.subagents?.model) ??
         normalizeModelSelection(cfg.agents?.defaults?.subagents?.model);

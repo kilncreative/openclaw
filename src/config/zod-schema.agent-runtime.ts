@@ -446,6 +446,8 @@ export const AgentEntrySchema = z
               .strict(),
           ])
           .optional(),
+        /** Task-to-model mapping by label. Gateway overrides model based on label match. */
+        taskModels: z.record(z.string(), z.string()).optional(),
       })
       .strict()
       .optional(),

@@ -36,6 +36,8 @@ export type AgentConfig = {
     allowAgents?: string[];
     /** Per-agent default model for spawned sub-agents (string or {primary,fallbacks}). */
     model?: string | { primary?: string; fallbacks?: string[] };
+    /** Task-to-model mapping by label. Gateway overrides model based on label match. */
+    taskModels?: Record<string, string>;
   };
   sandbox?: {
     mode?: "off" | "non-main" | "all";

@@ -204,6 +204,8 @@ export type AgentDefaultsConfig = {
     archiveAfterMinutes?: number;
     /** Default model selection for spawned sub-agents (string or {primary,fallbacks}). */
     model?: string | { primary?: string; fallbacks?: string[] };
+    /** Task-to-model mapping by label. Gateway overrides model based on label match. */
+    taskModels?: Record<string, string>;
   };
   /** Optional sandbox settings for non-main sessions. */
   sandbox?: {
